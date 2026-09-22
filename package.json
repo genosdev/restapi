@@ -1,0 +1,9 @@
+{
+  "name": "gen-rest-api",
+  "version": "1.0.0",
+  "description": "GEN REST API — by GENOS",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}
