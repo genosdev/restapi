@@ -5,51 +5,35 @@
 [functions]
   node_bundler = "esbuild"
 
-# INDEX
-[[redirects]]
-  from = "/api"
-  to = "/.netlify/functions/index"
-  status = 200
+[[redirects]]{from="/api",to="/.netlify/functions/index",status=200}
 
-# TOOLS — RFWeb2APK (3 fungsi)
-[[redirects]]
-  from = "/tools/rfweb2apk-url"
-  to = "/.netlify/functions/rfweb2apk-url"
-  status = 200
+# AI
+[[redirects]]{from="/ai/groq",to="/.netlify/functions/ai-groq",status=200}
+[[redirects]]{from="/ai/poll-chat",to="/.netlify/functions/ai-poll-chat",status=200}
+[[redirects]]{from="/ai/poll-img",to="/.netlify/functions/ai-poll-img",status=200}
 
-[[redirects]]
-  from = "/tools/rfweb2apk-zip"
-  to = "/.netlify/functions/rfweb2apk-zip"
-  status = 200
+# TOOLS
+[[redirects]]{from="/tools/rfweb2apk-url",to="/.netlify/functions/rfweb2apk-url",status=200}
+[[redirects]]{from="/tools/rfweb2apk-zip",to="/.netlify/functions/rfweb2apk-zip",status=200}
+[[redirects]]{from="/tools/rfweb2apk-html",to="/.netlify/functions/rfweb2apk-html",status=200}
 
-[[redirects]]
-  from = "/tools/rfweb2apk-html"
-  to = "/.netlify/functions/rfweb2apk-html"
-  status = 200
+# PREMIUM
+[[redirects]]{from="/premium/am-send",to="/.netlify/functions/am-send",status=200}
+[[redirects]]{from="/premium/am-verify",to="/.netlify/functions/am-verify",status=200}
+[[redirects]]{from="/premium/am-refresh",to="/.netlify/functions/am-refresh",status=200}
+[[redirects]]{from="/premium/am-status",to="/.netlify/functions/am-status",status=200}
 
-# PREMIUM — Alight Motion
-[[redirects]]
-  from = "/premium/am-send"
-  to = "/.netlify/functions/am-send"
-  status = 200
+# UPLOADER
+[[redirects]]{from="/uploader/catbox-file",to="/.netlify/functions/catbox-file",status=200}
+[[redirects]]{from="/uploader/catbox-temp",to="/.netlify/functions/catbox-temp",status=200}
+[[redirects]]{from="/uploader/catbox-url",to="/.netlify/functions/catbox-url",status=200}
 
-[[redirects]]
-  from = "/premium/am-verify"
-  to = "/.netlify/functions/am-verify"
-  status = 200
+# UTILITY
+[[redirects]]{from="/utility/tempmail-domains",to="/.netlify/functions/tempmail-domains",status=200}
+[[redirects]]{from="/utility/tempmail-create",to="/.netlify/functions/tempmail-create",status=200}
+[[redirects]]{from="/utility/tempmail-inbox",to="/.netlify/functions/tempmail-inbox",status=200}
+[[redirects]]{from="/utility/tempmail-read",to="/.netlify/functions/tempmail-read",status=200}
+[[redirects]]{from="/utility/kbbj",to="/.netlify/functions/kbbj",status=200}
 
-[[redirects]]
-  from = "/premium/am-refresh"
-  to = "/.netlify/functions/am-refresh"
-  status = 200
-
-[[redirects]]
-  from = "/premium/am-status"
-  to = "/.netlify/functions/am-status"
-  status = 200
-
-# SPA FALLBACK
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# SPA
+[[redirects]]{from="/*",to="/index.html",status=200}
