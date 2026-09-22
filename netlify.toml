@@ -5,21 +5,26 @@
 [functions]
   node_bundler = "esbuild"
 
-# ============================================================
-# REDIRECTS — Endpoint publik
-# URL asli: https://<site>.netlify.app/<path>
-# ============================================================
-
-# INDEX / LIST ENDPOINTS
+# INDEX
 [[redirects]]
   from = "/api"
   to = "/.netlify/functions/index"
   status = 200
 
-# TOOLS
+# TOOLS — RFWeb2APK (3 fungsi)
 [[redirects]]
-  from = "/tools/rfweb2apk"
-  to = "/.netlify/functions/rfweb2apk"
+  from = "/tools/rfweb2apk-url"
+  to = "/.netlify/functions/rfweb2apk-url"
+  status = 200
+
+[[redirects]]
+  from = "/tools/rfweb2apk-zip"
+  to = "/.netlify/functions/rfweb2apk-zip"
+  status = 200
+
+[[redirects]]
+  from = "/tools/rfweb2apk-html"
+  to = "/.netlify/functions/rfweb2apk-html"
   status = 200
 
 # PREMIUM — Alight Motion
@@ -43,7 +48,7 @@
   to = "/.netlify/functions/am-status"
   status = 200
 
-# SPA FALLBACK — biar UI tetap jalan
+# SPA FALLBACK
 [[redirects]]
   from = "/*"
   to = "/index.html"
