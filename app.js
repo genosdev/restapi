@@ -115,7 +115,7 @@
     }
     grid.innerHTML = "";
     if (!list.length) {
-      grid.innerHTML = '<div style="padding:20px;font-family:JetBrains Mono,monospace;font-size:13px;color:#666">// tidak ada endpoint ditemukan</div>';
+      grid.innerHTML = '<div style="padding:20px;font-family:Space Mono,monospace;font-size:13px;color:#64748b">// tidak ada endpoint ditemukan</div>';
       return;
     }
     list.forEach((s) => {
@@ -160,7 +160,7 @@
     const wrap = $("#pgInputs");
     wrap.innerHTML = "";
     if (!scraper.inputs || !scraper.inputs.length) {
-      wrap.innerHTML = '<div style="font-size:12px;color:#666;font-family:JetBrains Mono,monospace">// tidak ada input</div>';
+      wrap.innerHTML = '<div style="font-size:12px;color:#64748b;font-family:Space Mono,monospace">// tidak ada input</div>';
       return;
     }
     scraper.inputs.forEach((inp) => {
@@ -203,12 +203,66 @@
     body.scrollTop = body.scrollHeight;
   }
 
+  /* JSON + COPY BUTTON */
   function appendJson(obj) {
     const body = $("#termBody");
+    const wrap = document.createElement("div");
+    wrap.className = "term-json-wrap";
+
     const el = document.createElement("div");
     el.className = "term-json";
     el.innerHTML = syntaxHighlight(obj);
-    body.appendChild(el);
+
+    const btn = document.createElement("button");
+    btn.className = "btn-copy";
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4">
+        <rect x="9" y="9" width="12" height="12" rx="2"/>
+        <path d="M5 15V5a2 2 0 012-2h10"/>
+      </svg>
+      COPY
+    `;
+
+    btn.onclick = async () => {
+      const text = JSON.stringify(obj, null, 2);
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        btn.classList.add("copied");
+        btn.innerHTML = `
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.6">
+            <path d="M5 13l4 4L19 7"/>
+          </svg>
+          COPIED!
+        `;
+        setTimeout(() => {
+          btn.classList.remove("copied");
+          btn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4">
+              <rect x="9" y="9" width="12" height="12" rx="2"/>
+              <path d="M5 15V5a2 2 0 012-2h10"/>
+            </svg>
+            COPY
+          `;
+        }, 1500);
+      } catch (e) {
+        btn.textContent = "FAILED";
+      }
+    };
+
+    wrap.appendChild(el);
+    wrap.appendChild(btn);
+    body.appendChild(wrap);
     body.scrollTop = body.scrollHeight;
   }
 
@@ -238,7 +292,7 @@
     el.className = "term-status " + s;
   }
 
-  /* EXECUTE — fetch ke Netlify Function */
+  /* EXECUTE */
   async function executeCurrent() {
     const scraper = state.current;
     if (!scraper) return;
