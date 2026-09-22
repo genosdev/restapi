@@ -1,26 +1,60 @@
 /* =========================================================
  * GEN REST API — Frontend Manifest
  * Author : GENOS
- * Daftar endpoint untuk UI (dipanggil via fetch ke API)
  * ========================================================= */
 
 window.ENDPOINTS = [
+  /* ============ TOOLS ============ */
   {
-    id: "rfweb2apk",
+    id: "rfweb2apk-url",
     category: "TOOLS",
-    name: "RFWeb2APK AUTO BUILDER",
-    desc: "Auto-build APK dari URL website. Auto-detect field, akun otomatis.",
+    name: "RFWeb2APK — URL to APK",
+    desc: "Convert website URL jadi file APK Android otomatis.",
     method: "POST",
-    path: "/tools/rfweb2apk",
+    path: "/tools/rfweb2apk-url",
     inputs: [
       { key: "url", label: "Website URL", type: "text", placeholder: "https://tokosaya.com", required: true },
       { key: "app_name", label: "Nama App", type: "text", placeholder: "Toko Saya", default: "My App" },
       { key: "package", label: "Package", type: "text", placeholder: "com.toko.saya (opsional)" },
       { key: "version", label: "Versi", type: "text", default: "1.0" },
       { key: "code", label: "Build Code", type: "text", default: "1" },
-      { key: "token", label: "Token (opsional, skip register)", type: "text", placeholder: "Bearer token kalau sudah punya" },
+      { key: "token", label: "Token (opsional)", type: "text", placeholder: "skip register" },
     ],
   },
+  {
+    id: "rfweb2apk-zip",
+    category: "TOOLS",
+    name: "RFWeb2APK — ZIP to APK",
+    desc: "Convert file ZIP (website offline) jadi file APK Android.",
+    method: "POST",
+    path: "/tools/rfweb2apk-zip",
+    inputs: [
+      { key: "url", label: "ZIP URL", type: "text", placeholder: "https://.../website.zip", required: true },
+      { key: "app_name", label: "Nama App", type: "text", placeholder: "Toko Saya", default: "My App" },
+      { key: "package", label: "Package", type: "text", placeholder: "com.toko.saya (opsional)" },
+      { key: "version", label: "Versi", type: "text", default: "1.0" },
+      { key: "code", label: "Build Code", type: "text", default: "1" },
+      { key: "token", label: "Token (opsional)", type: "text", placeholder: "skip register" },
+    ],
+  },
+  {
+    id: "rfweb2apk-html",
+    category: "TOOLS",
+    name: "RFWeb2APK — HTML to APK",
+    desc: "Convert file HTML jadi file APK Android langsung.",
+    method: "POST",
+    path: "/tools/rfweb2apk-html",
+    inputs: [
+      { key: "url", label: "HTML URL", type: "text", placeholder: "https://.../index.html", required: true },
+      { key: "app_name", label: "Nama App", type: "text", placeholder: "Toko Saya", default: "My App" },
+      { key: "package", label: "Package", type: "text", placeholder: "com.toko.saya (opsional)" },
+      { key: "version", label: "Versi", type: "text", default: "1.0" },
+      { key: "code", label: "Build Code", type: "text", default: "1" },
+      { key: "token", label: "Token (opsional)", type: "text", placeholder: "skip register" },
+    ],
+  },
+
+  /* ============ PREMIUM ============ */
   {
     id: "am-send",
     category: "PREMIUM",
