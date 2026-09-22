@@ -1,0 +1,50 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# ============================================================
+# REDIRECTS — Endpoint publik
+# URL asli: https://<site>.netlify.app/<path>
+# ============================================================
+
+# INDEX / LIST ENDPOINTS
+[[redirects]]
+  from = "/api"
+  to = "/.netlify/functions/index"
+  status = 200
+
+# TOOLS
+[[redirects]]
+  from = "/tools/rfweb2apk"
+  to = "/.netlify/functions/rfweb2apk"
+  status = 200
+
+# PREMIUM — Alight Motion
+[[redirects]]
+  from = "/premium/am-send"
+  to = "/.netlify/functions/am-send"
+  status = 200
+
+[[redirects]]
+  from = "/premium/am-verify"
+  to = "/.netlify/functions/am-verify"
+  status = 200
+
+[[redirects]]
+  from = "/premium/am-refresh"
+  to = "/.netlify/functions/am-refresh"
+  status = 200
+
+[[redirects]]
+  from = "/premium/am-status"
+  to = "/.netlify/functions/am-status"
+  status = 200
+
+# SPA FALLBACK — biar UI tetap jalan
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
