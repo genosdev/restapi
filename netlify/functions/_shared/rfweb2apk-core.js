@@ -1,7 +1,9 @@
 /* =========================================================
- * GEN REST API — RFWeb2APK Core (Shared)
+ * RFWeb2APK Core (Shared) — dengan dukungan drag&drop file
  * Author : GENOS
  * ========================================================= */
+
+const { uploadLitter } = require("./catbox");
 
 const API = "https://rfweb2apk.rfdevv.com";
 const TEMPMAIL = "https://akunlama.com/api";
@@ -14,16 +16,16 @@ const VER_FIELDS = ["versionName","version"];
 const CODE_FIELDS = ["versionCode","buildCode","build"];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const rnd = (n) => Array.from({ length: n }, () => "abcdefghijklmnopqrstuvwxyz0123456789".charAt(Math.floor(Math.random() * 36))).join("");
-const genEmail = () => `${rnd(8)}-${rnd(4)}-${Math.floor(Math.random() * 999)}@akunlama.com`;
-const genUser = () => `xv${rnd(6)}${Math.floor(Math.random() * 999)}`;
+const rnd = (n) => Array.from({length:n},()=>"abcdefghijklmnopqrstuvwxyz0123456789".charAt(Math.floor(Math.random()*36))).join("");
+const genEmail = () => `${rnd(8)}-${rnd(4)}-${Math.floor(Math.random()*999)}@akunlama.com`;
+const genUser = () => `xv${rnd(6)}${Math.floor(Math.random()*999)}`;
 const genPass = () => rnd(10) + "Aa1!";
 
 function parseJSON(t){ if(typeof t!=="string")return t; try{return JSON.parse(t)}catch{return null} }
 
 async function tmList(email){
   try{
-    const r = await fetch(`${TEMPMAIL}/list?recipient=${encodeURIComponent(email)}`,{headers:{"User-Agent":UA,Accept:"application/json",Origin:"https://akunlama.com",Referer:"https://akunlama.com/"}});
+    const r=await fetch(`${TEMPMAIL}/list?recipient=${encodeURIComponent(email)}`,{headers:{"User-Agent":UA,Accept:"application/json",Origin:"https://akunlama.com",Referer:"https://akunlama.com/"}});
     return await r.json();
   }catch{return null}
 }
@@ -69,7 +71,6 @@ async function apiVerify(email,code){
   const r=await fetch(`${API}/api/auth/verify-register`,{method:"POST",headers:{"Content-Type":"application/json","User-Agent":UA,Origin:API,Referer:API+"/"},body:JSON.stringify({email,code})});
   return{status:r.status,data:parseJSON(await r.text())};
 }
-
 async function createAccount(log){
   const email=genEmail(),username=genUser(),password=genPass();
   log(`[REG] Mendaftar: ${email}`);
@@ -77,19 +78,18 @@ async function createAccount(log){
   if(!(reg.data&&reg.data.success))throw new Error(`Register gagal: ${JSON.stringify(reg.data||reg.status)}`);
   log("[OTP] Menunggu kode (max 8s)...");
   const otpRes=await waitForOtp(email,8,2,(s)=>log(`[OTP] ${s}s...`));
-  if(!otpRes)throw new Error("OTP timeout. Coba lagi atau pakai parameter 'token' manual.");
+  if(!otpRes)throw new Error("OTP timeout. Pakai parameter 'token' manual kalau perlu.");
   log(`[OTP] Kode: ${otpRes.otp}`);
   const ver=await apiVerify(email,otpRes.otp);
   if(!(ver.data&&ver.data.success))throw new Error(`Verify gagal: ${JSON.stringify(ver.data||ver.status)}`);
   const d=ver.data,u=d.user||{};
   log("[ACC] Akun terverifikasi.");
-  return{id:u.id,email,username,password,token:d.token,apiKey:u.apiKey,role:u.role||"free"};
+  return{id:u.id,email,username,token:d.token};
 }
 
 async function tryBuild(url,appName,pkg,version,code,urlField,token,srcMode){
   const headers={"Content-Type":"application/json","User-Agent":UA,Origin:API,Referer:API+"/"};
   if(token)headers.Authorization=`Bearer ${token}`;
-
   const payload={
     [NAME_FIELDS[0]]:appName,
     [PKG_FIELDS[0]]:pkg,
@@ -98,7 +98,6 @@ async function tryBuild(url,appName,pkg,version,code,urlField,token,srcMode){
     [urlField]:url,
   };
   if(srcMode)payload.srcMode=srcMode;
-
   try{
     const r=await fetch(`${API}/api/apk/build`,{method:"POST",headers,body:JSON.stringify(payload)});
     const data=parseJSON(await r.text())||{};
@@ -110,13 +109,21 @@ async function tryBuild(url,appName,pkg,version,code,urlField,token,srcMode){
 }
 
 async function runBuild(mode,input,log){
-  const url=(input.url||"").trim();
+  let url=(input.url||"").trim();
   const appName=(input.app_name||"My App").trim();
   const pkg=(input.package||"").trim()||`com.${rnd(6)}.app`;
   const version=(input.version||"1.0").trim();
   const code=(input.code||"1").trim();
 
-  if(!url)throw new Error("Parameter 'url' wajib diisi");
+  // Jika ada file drag&drop → upload ke Litterbox dulu
+  if(input.file_b64 && input.filename){
+    log("[FILE] Upload file ke Litterbox...");
+    const up = await uploadLitter(input.file_b64, input.filename, "1h");
+    url = up.url;
+    log(`[FILE] URL: ${url}`);
+  }
+
+  if(!url)throw new Error("Parameter 'url' atau 'file_b64' wajib diisi");
   if(!/^https?:\/\//i.test(url))throw new Error("URL harus diawali http:// atau https://");
 
   let token=(input.token||"").trim();
@@ -133,14 +140,14 @@ async function runBuild(mode,input,log){
   for(const field of URL_FIELDS){
     log(`[DETECT] Coba field '${field}'...`);
     const r=await tryBuild(url,appName,pkg,version,code,field,token,mode);
-    if(r.ok){ log(`[DETECT] Berhasil pakai field: ${field}`); return{response:r.response,field_used:field,token}; }
+    if(r.ok){ log(`[DETECT] Berhasil pakai field: ${field}`); return{response:r.response,field_used:field,token,source_url:url}; }
     const err=(r.response&&r.response.error)||"gagal";
     log(`  ✗ ${err}`);
     if(!String(err).toLowerCase().includes("url")&&!String(err).toLowerCase().includes("wajib")){
       throw new Error(`Build gagal: ${err}`);
     }
   }
-  throw new Error(`Build gagal: semua kandidat field URL dicoba`);
+  throw new Error("Build gagal: semua kandidat field URL dicoba");
 }
 
 module.exports = { runBuild };
