@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GEN REST API — by GENOS</title>
+<meta name="description" content="GEN REST API — Dashboard scraper publik. Author: GENOS" />
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ==================================================
+     LOADER — pakai FOTO assets/logo.png
+     ================================================== -->
+<div id="loader" class="overlay active">
+  <div class="loader-inner">
+
+    <div class="logo-aura">
+      <img id="loaderLogo" class="logo-img" src="assets/logo.png" alt="GEN REST API" />
+      <svg id="loaderLogoFallback" viewBox="0 0 200 200" class="logo-svg" style="display:none">
+        <defs>
+          <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#FFE600"/>
+            <stop offset="100%" stop-color="#FF4C4C"/>
+          </linearGradient>
+        </defs>
+        <polygon points="100,15 175,57 175,143 100,185 25,143 25,57" fill="#000"/>
+        <polygon points="100,30 162,65 162,135 100,170 38,135 38,65" fill="url(#lg)"/>
+        <path d="M70 100 L90 100 L90 80 M90 120 L90 130 L120 130 L120 100 L100 100"
+              stroke="#000" stroke-width="8" fill="none" stroke-linecap="square"/>
+        <circle cx="100" cy="100" r="6" fill="#000"/>
+      </svg>
+    </div>
+
+    <div class="loader-title">GEN REST API</div>
+    <div class="loader-sub">INITIALIZING CORE SYSTEM</div>
+
+    <div class="loader-bar">
+      <div id="loaderFill"></div>
+    </div>
+
+    <div class="loader-meta">
+      <span id="loaderPct">0%</span>
+      <span>AUTHOR: GENOS</span>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================
+     SPLASH — pakai VIDEO assets/splash.mp4
+     ================================================== -->
+<div id="splash" class="overlay">
+  <video id="splashVideo" src="assets/splash.mp4" playsinline muted autoplay preload="auto"></video>
+  <div class="splash-fallback" id="splashFallback">
+    <div class="splash-text">WELCOME</div>
+    <div class="splash-sub">GEN REST API</div>
+  </div>
+  <button id="btnSkip" class="btn-skip">
+    SKIP
+    <svg viewBox="0 0 24 24" width="14" height="14"><path d="M5 4l10 8-10 8V4zm11 0h3v16h-3V4z" fill="currentColor"/></svg>
+  </button>
+</div>
+
+<!-- ==================================================
+     APP SHELL
+     ================================================== -->
+<div id="app" class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <polygon points="12,1 22,7 22,17 12,23 2,17 2,7" fill="#000"/>
+          <polygon points="12,5 19,9 19,15 12,19 5,15 5,9" fill="#FFE600"/>
+          <path d="M9 12 L11 12 L11 10 M11 14 L11 15 L14 15 L14 12 L12 12"
+                stroke="#000" stroke-width="2" fill="none"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">GEN REST API</div>
+        <div class="brand-tag">BY GENOS</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="nav-item active" data-view="home">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 11l9-8 9 8v9a2 2 0 01-2 2h-4v-6h-6v6H5a2 2 0 01-2-2v-9z" fill="currentColor"/></svg>
+        <span>HOME</span>
+      </a>
+      <a href="#" class="nav-item" data-view="explorer">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h7v7H4V4zm9 0h7v7h-7V4zM4 13h7v7H4v-7zm9 0h7v7h-7v-7z" fill="currentColor"/></svg>
+        <span>EXPLORER</span>
+      </a>
+      <a href="#" class="nav-item" data-view="docs">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 2h9l5 5v15H6V2zm8 1v5h5M9 13h9M9 17h9" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span>DOCS</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <span class="status-dot"></span>
+      <span id="statusScrapers">0 ENDPOINTS</span>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="content">
+
+    <!-- ---------- VIEW: HOME ---------- -->
+    <section id="view-home" class="view active">
+      <header class="topbar">
+        <div class="crumb">HOME / OVERVIEW</div>
+        <div class="topbar-badge">v1.0.0</div>
+      </header>
+
+      <div class="hero">
+        <div class="hero-left">
+          <div class="tag-row">
+            <span class="tag tag-yellow">REST API</span>
+            <span class="tag tag-red">NO KEY</span>
+          </div>
+          <h1>GEN REST API</h1>
+          <p class="hero-desc">
+            Kumpulan endpoint scraper siap pakai. Satu dashboard, banyak kategori
+            — AI, Tools, Downloader, Premium, Utility. Eksekusi langsung dari
+            browser tanpa setup. Setiap response ditandatangani oleh GENOS.
+          </p>
+
+          <div class="cta-row">
+            <button id="btnStart" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 4l14 8-14 8V4z" fill="currentColor"/></svg>
+              MULAI
+            </button>
+            <button class="btn btn-ghost" data-view="docs">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6 2h9l5 5v15H6V2zm8 1v5h5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+              LIHAT DOCS
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="code-card">
+            <div class="code-head">
+              <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+              <span class="code-title">response.json</span>
+            </div>
+            <pre class="code-body">{
+  <span class="k">"author"</span>: <span class="s">"GENOS"</span>,
+  <span class="k">"powered_by"</span>: <span class="s">"GEN REST API"</span>,
+  <span class="k">"ok"</span>: <span class="b">true</span>,
+  <span class="k">"data"</span>: {
+    <span class="k">"message"</span>: <span class="s">"Hello Bos!"</span>
+  }
+}</pre>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">KELEBIHAN</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="fc-icon fc-yellow">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" fill="currentColor"/></svg>
+          </div>
+          <h3>CEPAT & RINGAN</h3>
+          <p>Endpoint dieksekusi langsung dari browser. Tanpa build step, tanpa dependencies.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon fc-red">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z" fill="currentColor"/></svg>
+          </div>
+          <h3>MODULAR SCRAPER</h3>
+          <p>Tambah scraper baru cukup di satu file. Struktur bersih, gampang dimaintain.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon fc-blue">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 6h16v12H4z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M8 10l3 2-3 2M13 14h4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </div>
+          <h3>TERMINAL RESPONSE</h3>
+          <p>Output JSON dirapikan, di-highlight, plus author GENOS otomatis di setiap response.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon fc-green">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 12h4l2-8 4 16 2-8h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>REALTIME STATUS</h3>
+          <p>Loading animation live saat menembak server. Status jelas: connecting, receiving, done.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon fc-purple">
+            <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+          </div>
+          <h3>NO RATE LIMIT UI</h3>
+          <p>Bebas eksekusi berulang. Riwayat output tampil di terminal, tinggal scroll.</p>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon fc-orange">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 4h16v4H4zM4 10h16v4H4zM4 16h10v4H4z" fill="currentColor"/></svg>
+          </div>
+          <h3>PUBLIC ENDPOINT</h3>
+          <p>Bisa dipanggil dari script apapun — cURL, Postman, Python, Node.js, Bot.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- VIEW: EXPLORER ---------- -->
+    <section id="view-explorer" class="view">
+      <header class="topbar">
+        <div class="crumb">EXPLORER / ENDPOINTS</div>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" width="14" height="14"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2"/></svg>
+          <input id="searchApi" type="text" placeholder="Cari endpoint..." />
+        </div>
+      </header>
+
+      <div class="cat-tabs" id="catTabs"></div>
+      <div class="api-grid" id="apiGrid"></div>
+    </section>
+
+    <!-- ---------- VIEW: PLAYGROUND ---------- -->
+    <section id="view-playground" class="view">
+      <header class="topbar">
+        <button class="btn-back" id="btnBack">
+          <svg viewBox="0 0 24 24" width="14" height="14"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="3" fill="none"/></svg>
+          BACK
+        </button>
+        <div class="pg-title" id="pgTitle">ENDPOINT</div>
+        <div class="pg-method" id="pgMethod">POST</div>
+      </header>
+
+      <div class="pg-body">
+        <div class="pg-panel">
+          <div class="panel-head">PARAMETERS</div>
+          <div id="pgInputs" class="input-list"></div>
+          <button id="btnExecute" class="btn btn-primary btn-block">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" fill="currentColor"/></svg>
+            EXECUTE
+          </button>
+          <button id="btnClear" class="btn btn-ghost btn-block">CLEAR OUTPUT</button>
+        </div>
+
+        <div class="pg-terminal">
+          <div class="term-head">
+            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+            <span class="term-title">gen-rest-api ~ terminal</span>
+            <span class="term-status" id="termStatus">IDLE</span>
+          </div>
+          <div class="term-body" id="termBody">
+            <div class="term-line term-muted">// GEN REST API — terminal ready</div>
+            <div class="term-line term-muted">// Author: GENOS</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- VIEW: DOCS ---------- -->
+    <section id="view-docs" class="view">
+      <header class="topbar">
+        <div class="crumb">DOCS / USAGE</div>
+      </header>
+      <div class="docs-body">
+        <h1 class="docs-h1">CARA PAKAI DI UI</h1>
+        <ol class="docs-list">
+          <li>Buka menu <b>EXPLORER</b> di sidebar.</li>
+          <li>Pilih kategori (TOOLS, PREMIUM, dll).</li>
+          <li>Klik salah satu kartu endpoint.</li>
+          <li>Isi parameter di panel kiri.</li>
+          <li>Klik <b>EXECUTE</b> dan lihat output di terminal.</li>
+        </ol>
+
+        <h1 class="docs-h1">PAKAI DI SCRIPT LUAR</h1>
+        <p class="docs-p">Setiap endpoint bisa dipanggil sebagai REST API:</p>
+        <pre class="docs-code"># cURL
+curl -X POST https://&lt;site&gt;.netlify.app/tools/rfweb2apk \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://tokosaya.com","app_name":"Toko Saya"}'
+
+# JavaScript
+const r = await fetch("https://&lt;site&gt;.netlify.app/premium/am-send", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ email: "user@gmail.com" }),
+});
+const data = await r.json();
+console.log(data);</pre>
+
+        <h1 class="docs-h1">STRUKTUR RESPONSE</h1>
+        <p class="docs-p">Setiap response otomatis ditambahkan metadata author:</p>
+        <pre class="docs-code">{
+  "author": "GENOS",
+  "powered_by": "GEN REST API",
+  "endpoint": "rfweb2apk",
+  "category": "TOOLS",
+  "timestamp": "ISO-8601",
+  "ok": true,
+  "data": { ...raw scraper... }
+}</pre>
+
+        <h1 class="docs-h1">DAFTAR ENDPOINT</h1>
+        <pre class="docs-code">GET  /api                    → list semua endpoint
+POST /tools/rfweb2apk        → auto-build APK dari URL
+POST /premium/am-send        → kirim magic link Alight Motion
+POST /premium/am-verify      → verifikasi & aktifkan premium
+POST /premium/am-refresh     → refresh id_token
+POST /premium/am-status      → cek status sesi</pre>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ==================================================
+     SCRIPTS
+     ================================================== -->
+<script src="scrapers/manifest.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
